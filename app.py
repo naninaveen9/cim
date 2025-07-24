@@ -158,9 +158,9 @@ def index():
                 </head>
                 <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
                     <div style='background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:600px;margin:0 auto;text-align:center;'>
-                        <h2 style='color:#ff6b35;'><i class="bi bi-trophy" style="margin-right:10px;"></i>Award Polling System</h2>
+                        <h2 style='color:#ff6b35;'><i class="bi bi-trophy" style="margin-right:10px;"></i>CIMPHONY 2025 Awards</h2>
                         <h3 style='color:#dc3545;'>No active poll at the moment.</h3>
-                        <p style='color:#666;'>An administrator needs to activate a poll.</p>
+                        <p style='color:#666;'>Wait for Admin to activate a poll.</p>
                         <p>
                             <a href='/admin' style='background:#007bff;color:white;padding:15px 25px;text-decoration:none;border-radius:5px;margin:10px;display:inline-block;'><i class="bi bi-gear-fill" style="margin-right:8px;"></i>Admin Panel</a>
                             <a href='/results' style='background:#28a745;color:white;padding:15px 25px;text-decoration:none;border-radius:5px;margin:10px;display:inline-block;'><i class="bi bi-bar-chart-fill" style="margin-right:8px;"></i>View Results</a>
