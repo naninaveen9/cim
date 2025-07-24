@@ -1,0 +1,15 @@
+<h2>🏆 Award Polls</h2>
+<ul>
+{% for id, name, desc, posted, winner, current in awards %}
+    <li>
+        <b>{{ name }}</b> — {{ desc }}<br>
+        {% if posted %}
+            ✅ Winner: {{ winner }}
+        {% elif current %}
+            <a href="{{ url_for('vote', award_id=id) }}">Vote</a> |
+            <a href="{{ url_for('end_poll', award_id=id) }}">End Poll</a>
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+<a href="{{ url_for('results') }}">View All Results</a> | <a href="{{ url_for('admin_panel') }}">Admin</a>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poll Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #28a745; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
+        th { background: #f8f9fa; font-weight: bold; }
+        .winner { color: #28a745; font-weight: bold; }
+        .votes-list { list-style: none; padding: 0; margin: 0; }
+        .votes-list li { padding: 4px 0; }
+        .back-btn { background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px; }
+        .live-poll { background: #d1ecf1; }
+        .closed-poll { background: #f8d7da; }
+        .category-header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 15px; 
+            margin: 25px 0 10px 0; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            text-align: center;
+        }
+        .award-row { margin: 8px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📊 Team Award Poll Results</h2>
+        
+        <!-- Funny & Light-Hearted Awards -->
+        <div class="category-header">🏆 Funny & Light-Hearted Awards</div>
+        <table>
+            <tr><th>Award</th><th>Description</th><th>Status</th><th>Winner</th><th>Votes</th></tr>
+            {% for award in awards[:10] %}
+            <tr class="{% if award.posted %}closed-poll{% elif award.votes %}live-poll{% endif %} award-row">
+                <td><strong>{{ award.name }}</strong></td>
+                <td>{{ award.description }}</td>
+                <td>
+                    {% if award.posted %}
+                        <span style="color:#dc3545;">Closed</span>
+                    {% elif award.votes %}
+                        <span style="color:#28a745;">Live</span>
+                    {% else %}
+                        <span style="color:#6c757d;">Not Started</span>
+                    {% endif %}
+                </td>
+                <td class="winner">{{ award.winner or "TBD" }}</td>
+                <td>
+                    {% if award.votes %}
+                        <ul class="votes-list">
+                        {% for nominee, count in award.votes %}
+                            <li>{{ nominee }}: <strong>{{ count }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% if award.winner %}
+                            <em>Results archived</em>
+                        {% else %}
+                            <em>No votes yet</em>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Personality-Based Awards -->
+        <div class="category-header">🎭 Personality-Based Awards</div>
+        <table>
+            <tr><th>Award</th><th>Description</th><th>Status</th><th>Winner</th><th>Votes</th></tr>
+            {% for award in awards[10:17] %}
+            <tr class="{% if award.posted %}closed-poll{% elif award.votes %}live-poll{% endif %} award-row">
+                <td><strong>{{ award.name }}</strong></td>
+                <td>{{ award.description }}</td>
+                <td>
+                    {% if award.posted %}
+                        <span style="color:#dc3545;">Closed</span>
+                    {% elif award.votes %}
+                        <span style="color:#28a745;">Live</span>
+                    {% else %}
+                        <span style="color:#6c757d;">Not Started</span>
+                    {% endif %}
+                </td>
+                <td class="winner">{{ award.winner or "TBD" }}</td>
+                <td>
+                    {% if award.votes %}
+                        <ul class="votes-list">
+                        {% for nominee, count in award.votes %}
+                            <li>{{ nominee }}: <strong>{{ count }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% if award.winner %}
+                            <em>Results archived</em>
+                        {% else %}
+                            <em>No votes yet</em>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Performance/Workstyle Awards -->
+        <div class="category-header">📈 Performance/Workstyle Awards</div>
+        <table>
+            <tr><th>Award</th><th>Description</th><th>Status</th><th>Winner</th><th>Votes</th></tr>
+            {% for award in awards[17:23] %}
+            <tr class="{% if award.posted %}closed-poll{% elif award.votes %}live-poll{% endif %} award-row">
+                <td><strong>{{ award.name }}</strong></td>
+                <td>{{ award.description }}</td>
+                <td>
+                    {% if award.posted %}
+                        <span style="color:#dc3545;">Closed</span>
+                    {% elif award.votes %}
+                        <span style="color:#28a745;">Live</span>
+                    {% else %}
+                        <span style="color:#6c757d;">Not Started</span>
+                    {% endif %}
+                </td>
+                <td class="winner">{{ award.winner or "TBD" }}</td>
+                <td>
+                    {% if award.votes %}
+                        <ul class="votes-list">
+                        {% for nominee, count in award.votes %}
+                            <li>{{ nominee }}: <strong>{{ count }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% if award.winner %}
+                            <em>Results archived</em>
+                        {% else %}
+                            <em>No votes yet</em>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Fun Custom Awards -->
+        <div class="category-header">🥳 Fun Custom Awards</div>
+        <table>
+            <tr><th>Award</th><th>Description</th><th>Status</th><th>Winner</th><th>Votes</th></tr>
+            {% for award in awards[23:] %}
+            <tr class="{% if award.posted %}closed-poll{% elif award.votes %}live-poll{% endif %} award-row">
+                <td><strong>{{ award.name }}</strong></td>
+                <td>{{ award.description }}</td>
+                <td>
+                    {% if award.posted %}
+                        <span style="color:#dc3545;">Closed</span>
+                    {% elif award.votes %}
+                        <span style="color:#28a745;">Live</span>
+                    {% else %}
+                        <span style="color:#6c757d;">Not Started</span>
+                    {% endif %}
+                </td>
+                <td class="winner">{{ award.winner or "TBD" }}</td>
+                <td>
+                    {% if award.votes %}
+                        <ul class="votes-list">
+                        {% for nominee, count in award.votes %}
+                            <li>{{ nominee }}: <strong>{{ count }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% if award.winner %}
+                            <em>Results archived</em>
+                        {% else %}
+                            <em>No votes yet</em>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <a href="/" class="back-btn">🏠 Back to Home</a>
+        <a href="/admin" class="back-btn" style="background:#dc3545;">👨‍💼 Admin Panel</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #dc3545; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
+        th { background: #f8f9fa; font-weight: bold; }
+        .current { background: #d4edda; }
+        .posted { background: #f8d7da; }
+        .btn { padding: 6px 12px; margin: 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-success { background: #28a745; color: white; }
+        .btn:hover { opacity: 0.8; }
+        .nav-links { margin-top: 20px; }
+        .nav-links a { background: #17a2b8; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px; }
+        .winners-section { background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0; }
+        .stats { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .flash-messages { margin: 15px 0; }
+        .flash-message { padding: 12px; border-radius: 5px; margin: 5px 0; }
+        .flash-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .flash-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .flash-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .danger-zone { background: #fff5f5; border: 2px solid #fed7d7; padding: 20px; border-radius: 5px; margin: 20px 0; }
+        .danger-zone h4 { color: #e53e3e; }
+        .data-section { background: #f0f8ff; padding: 20px; border-radius: 5px; margin: 20px 0; }
+        .nominee-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 10px 0; }
+        .nominee-item { background: white; padding: 8px; border-radius: 3px; font-size: 14px; border-left: 3px solid #007bff; }
+        .collapsible { background: #e9ecef; padding: 10px; border: none; width: 100%; text-align: left; cursor: pointer; border-radius: 5px; margin: 5px 0; }
+        .collapsible:hover { background: #dee2e6; }
+        .content { display: none; padding: 15px; background: white; border-radius: 5px; margin-top: 5px; }
+        .content.active { display: block; }
+        .category-section { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #007bff; }
+        .category-title { font-weight: bold; color: #007bff; margin-bottom: 10px; }
+        .award-item { background: white; padding: 8px; margin: 4px 0; border-radius: 3px; border-left: 3px solid #dee2e6; }
+        .award-item.current { border-left-color: #28a745; background: #d4edda; }
+        .award-item.posted { border-left-color: #dc3545; background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-header">
+            <h2>👨‍💼 Admin Panel</h2>
+            <a href="{{ url_for('admin_logout') }}" style="background:#6c757d;color:white;padding:8px 15px;text-decoration:none;border-radius:5px;">🚪 Logout</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="data-section">
+            <h4>👥 Team Members & Awards Overview</h4>
+            
+            <button class="collapsible" onclick="toggleContent('nominees-content')">
+                📋 View All Team Members (31)
+            </button>
+            <div id="nominees-content" class="content">
+                <div class="nominee-grid">
+                    {% set team_members = [
+                        "Adidya Baskaran", "Aishwarya Govindarajan", "Kanimozhi D", "Arun Pandian Mani",
+                        "Karthik D", "Vijayavani P", "Vickram S K", "Dinesh Balaji A", "Varun Vanchinathan",
+                        "Pavithra Chandra sekar", "Lakshmikandhan mahalingam", "Nagendran Varathan",
+                        "Praveen Sekhar", "Thamizharasan Deivanayagaperumal", "Sabariraj Ganesan",
+                        "Athira U", "Krishna Mohan S", "Ashita Pravallika Paipuri", "Ripal Gohel",
+                        "Ali Asghar Fakhruddin Bhagat", "Tamilarasan Kailasam", "Siddhartha Sengupta",
+                        "Sai Krishna Gudla", "Rajaram R", "Mariappan Ramasamy", "Karthik A",
+                        "Biswajit Das", "Balachandra Udayavara", "Nanaji Guntreddi",
+                        "Praveen Kumar Dhanushkotti", "Kalanidhi J"
+                    ] %}
+                    {% for nominee in team_members %}
+                        <div class="nominee-item">{{ nominee }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button class="collapsible" onclick="toggleContent('awards-content')">
+                🏆 View All Awards by Category (30)
+            </button>
+            <div id="awards-content" class="content">
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <!-- Funny & Light-Hearted Awards -->
+                    <div class="category-section">
+                        <div class="category-title">🏆 Funny & Light-Hearted Awards</div>
+                        {% for id, name, posted, winner, current in awards[:10] %}
+                            <div class="award-item {% if current %}current{% elif posted %}posted{% endif %}">
+                                <strong>{{ id }}. {{ name }}</strong>
+                                {% if posted %}<span style="color: #dc3545; float: right;">✅ {{ winner }}</span>{% endif %}
+                                {% if current %}<span style="color: #28a745; float: right;">🔴 LIVE</span>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Personality-Based Awards -->
+                    <div class="category-section">
+                        <div class="category-title">🎭 Personality-Based Awards</div>
+                        {% for id, name, posted, winner, current in awards[10:17] %}
+                            <div class="award-item {% if current %}current{% elif posted %}posted{% endif %}">
+                                <strong>{{ id }}. {{ name }}</strong>
+                                {% if posted %}<span style="color: #dc3545; float: right;">✅ {{ winner }}</span>{% endif %}
+                                {% if current %}<span style="color: #28a745; float: right;">🔴 LIVE</span>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Performance/Workstyle Awards -->
+                    <div class="category-section">
+                        <div class="category-title">📈 Performance/Workstyle Awards</div>
+                        {% for id, name, posted, winner, current in awards[17:23] %}
+                            <div class="award-item {% if current %}current{% elif posted %}posted{% endif %}">
+                                <strong>{{ id }}. {{ name }}</strong>
+                                {% if posted %}<span style="color: #dc3545; float: right;">✅ {{ winner }}</span>{% endif %}
+                                {% if current %}<span style="color: #28a745; float: right;">🔴 LIVE</span>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Fun Custom Awards -->
+                    <div class="category-section">
+                        <div class="category-title">🥳 Fun Custom Awards</div>
+                        {% for id, name, posted, winner, current in awards[23:] %}
+                            <div class="award-item {% if current %}current{% elif posted %}posted{% endif %}">
+                                <strong>{{ id }}. {{ name }}</strong>
+                                {% if posted %}<span style="color: #dc3545; float: right;">✅ {{ winner }}</span>{% endif %}
+                                {% if current %}<span style="color: #28a745; float: right;">🔴 LIVE</span>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <h4>📊 Statistics</h4>
+            <p><strong>Available Nominees:</strong> {{ available_count }} / 31</p>
+            <p><strong>Previous Winners:</strong> {{ winners_list|length }}</p>
+        </div>
+
+        {% if winners_list %}
+        <div class="winners-section">
+            <h4>🏆 Previous Winners</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                {% for winner, award in winners_list %}
+                    <div style="background: white; padding: 10px; border-radius: 5px; border-left: 4px solid #28a745;">
+                        <strong>{{ winner }}</strong><br>
+                        <small>{{ award }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+            <form method="post" style="margin-top: 15px;">
+                <button name="action" value="reset_winners" class="btn btn-warning" onclick="return confirm('⚠️ Are you sure you want to reset all winners?\n\nThis will make all nominees eligible again for future polls.')">🔄 Reset All Winners</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="danger-zone">
+            <h4>⚠️ DANGER ZONE</h4>
+            <p><strong>Reset Entire Contest:</strong> This will delete ALL data including votes, winners, and results. The contest will start completely fresh.</p>
+            <form method="post" style="margin-top: 10px;">
+                <button name="action" value="reset_entire_contest" class="btn btn-danger" onclick="return confirm('🚨 DANGER: RESET ENTIRE CONTEST 🚨\n\nThis will permanently delete:\n✗ All votes\n✗ All winners\n✗ All results\n✗ All poll history\n\nThe contest will start completely fresh.\n\nAre you ABSOLUTELY SURE you want to continue?\n\nThis action CANNOT be undone!')">💥 RESET ENTIRE CONTEST</button>
+            </form>
+        </div>
+
+        <h3>Award Management</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Award Name</th>
+                <th>Status</th>
+                <th>Winner</th>
+                <th>Current</th>
+                <th>Actions</th>
+            </tr>
+            {% for id, name, posted, winner, current in awards %}
+            <tr class="{% if current %}current{% elif posted %}posted{% endif %}">
+                <td>{{ id }}</td>
+                <td>{{ name }}</td>
+                <td>
+                    {% if posted %}
+                        <span style="color:#dc3545;">✅ Closed</span>
+                    {% elif current %}
+                        <span style="color:#28a745;">🔴 LIVE</span>
+                    {% else %}
+                        <span style="color:#6c757d;">⏸️ Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ winner or '-' }}</td>
+                <td>{{ '🔴' if current else '' }}</td>
+                <td>
+                    {% if not current %}
+                    <form method="post" style="display:inline;">
+                        <input type="hidden" name="award_id" value="{{ id }}">
+                        <button name="action" value="set_current" class="btn btn-primary">▶️ Activate</button>
+                    </form>
+                    {% endif %}
+                    
+                    {% if current and not posted %}
+                    <form method="post" style="display:inline;">
+                        <input type="hidden" name="award_id" value="{{ id }}">
+                        <button name="action" value="end" class="btn btn-danger" onclick="return confirm('End this poll and declare the winner?')">🛑 End Poll</button>
+                    </form>
+                    {% endif %}
+                    
+                    {% if posted %}
+                    <form method="post" style="display:inline;">
+                        <input type="hidden" name="award_id" value="{{ id }}">
+                        <button name="action" value="reopen" class="btn btn-warning" onclick="return confirm('Reopen this poll? This will clear the current winner and allow voting again.')">🔄 Reopen</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <div class="nav-links">
+            <a href="/">🏠 Go to Current Poll</a>
+            <a href="/results">📊 View All Results</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleContent(contentId) {
+            var content = document.getElementById(contentId);
+            content.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
