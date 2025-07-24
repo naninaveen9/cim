@@ -144,20 +144,29 @@
         <div class="stats">
             <h4>📊 Statistics</h4>
             <p><strong>Available Nominees:</strong> {{ available_count }} / 31</p>
-            <p><strong>Previous Winners:</strong> {{ winners_list|length }}</p>
+            <p><strong>Previous Winners:</strong> {{ winners_list|length }} total wins</p>
+            <p><strong>Rule:</strong> Nominees removed after 3 wins</p>
         </div>
 
         {% if winners_list %}
         <div class="winners-section">
-            <h4>🏆 Previous Winners</h4>
+            <h4>🏆 Previous Winners (Win Counts)</h4>
+            {% set winner_counts = {} %}
+            {% for winner, award in winners_list %}
+                {% if winner_counts.update({winner: winner_counts.get(winner, 0) + 1}) %}{% endif %}
+            {% endfor %}
+            
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-                {% for winner, award in winners_list %}
-                    <div style="background: white; padding: 10px; border-radius: 5px; border-left: 4px solid #28a745;">
+                {% for winner in winner_counts %}
+                    <div style="background: white; padding: 10px; border-radius: 5px; border-left: 4px solid {% if winner_counts[winner] >= 3 %}#dc3545{% elif winner_counts[winner] == 2 %}#ffc107{% else %}#28a745{% endif %};">
                         <strong>{{ winner }}</strong><br>
-                        <small>{{ award }}</small>
+                        <small>{{ winner_counts[winner] }} win{{ 's' if winner_counts[winner] != 1 else '' }}
+                        {% if winner_counts[winner] >= 3 %} - <span style="color:#dc3545;">RETIRED</span>{% endif %}
+                        </small>
                     </div>
                 {% endfor %}
             </div>
+            
             <form method="post" style="margin-top: 15px;">
                 <button name="action" value="reset_winners" class="btn btn-warning" onclick="return confirm('⚠️ Are you sure you want to reset all winners?\n\nThis will make all nominees eligible again for future polls.')">🔄 Reset All Winners</button>
             </form>

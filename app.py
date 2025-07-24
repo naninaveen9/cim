@@ -116,12 +116,17 @@ def init_db():
         conn.commit()
 
 def get_available_nominees():
-    """Get nominees who haven't won any awards yet"""
+    """Get nominees who haven't won 3 or more awards yet"""
     with db_conn() as conn:
         c = conn.cursor()
-        c.execute("SELECT DISTINCT nominee FROM winners")
-        winners = [row[0] for row in c.fetchall()]
-        return [nominee for nominee in NOMINEES if nominee not in winners]
+        # Count wins per nominee
+        c.execute("SELECT nominee, COUNT(*) as win_count FROM winners GROUP BY nominee")
+        winner_counts = c.fetchall()
+        
+        # Create a list of nominees who have won 3 or more times
+        excluded_nominees = [nominee for nominee, count in winner_counts if count >= 3]
+        
+        return [nominee for nominee in NOMINEES if nominee not in excluded_nominees]
 
 @app.before_request
 def assign_key():
@@ -402,7 +407,7 @@ def vote(award_id):
                     <h2>🏆 {{ name }}</h2>
                     <p><em>{{ description }}</em></p>
                     <h3 style='color:#28a745;'>🎉 Winner: {{ winner }}</h3>
-                    <h4>📊 Vote Breakdown:</h4>
+                    <h4>Vote Breakdown:</h4>
                     {{ vote_summary|safe }}
                     <br><br>
                     {{ current_link|safe }}
@@ -411,7 +416,7 @@ def vote(award_id):
                 </html>
             """, name=name, description=description, winner=winner, vote_summary=vote_summary, current_link=current_link)
         
-        # Get available nominees (excluding previous winners)
+        # Get available nominees (excluding those with 3+ wins)
         available_nominees = get_available_nominees()
         if not available_nominees:
             return render_template_string("""
@@ -422,7 +427,7 @@ def vote(award_id):
                     <div style='background:white;padding:30px;border-radius:10px;text-align:center;'>
                         <h2>🏆 {{ name }}</h2>
                         <h3 style='color:#dc3545;'>No nominees available!</h3>
-                        <p>All users have already won awards. Please contact the admin to reset winners or add new nominees.</p>
+                        <p>All team members have already won 3 or more awards. Please contact the admin to reset winners or add new nominees.</p>
                         <a href='/admin' style='background:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'>👨‍💼 Admin Panel</a>
                     </div>
                 </body>
