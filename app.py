@@ -154,16 +154,28 @@ def index():
                 <html>
                 <head>
                     <title>Award Polls - No Active Poll</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+                    <style>
+                        body { font-family:Arial,sans-serif; margin:20px; background:#f8f9fa; }
+                        .container { background:white; padding:30px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); max-width:600px; margin:0 auto; text-align:center; }
+                        a { display:inline-block; margin:10px; padding:15px 25px; }
+                        @media (max-width: 768px) {
+                            body { margin:10px; }
+                            .container { padding:20px; }
+                            h2 { font-size:1.5em; }
+                            a { display:block; margin:10px 0; padding:12px 20px; }
+                        }
+                    </style>
                 </head>
-                <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
-                    <div style='background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:600px;margin:0 auto;text-align:center;'>
+                <body>
+                    <div class="container">
                         <h2 style='color:#ff6b35;'><i class="bi bi-trophy" style="margin-right:10px;"></i>CIMPHONY 2025 Awards</h2>
                         <h3 style='color:#dc3545;'>No active poll at the moment.</h3>
                         <p style='color:#666;'>Wait for Admin to activate a poll.</p>
                         <p>
-                            <a href='/admin' style='background:#007bff;color:white;padding:15px 25px;text-decoration:none;border-radius:5px;margin:10px;display:inline-block;'><i class="bi bi-gear-fill" style="margin-right:8px;"></i>Admin Panel</a>
-                            <a href='/results' style='background:#28a745;color:white;padding:15px 25px;text-decoration:none;border-radius:5px;margin:10px;display:inline-block;'><i class="bi bi-bar-chart-fill" style="margin-right:8px;"></i>View Results</a>
+                            <a href='/admin' style='background:#007bff;color:white;text-decoration:none;border-radius:5px;'><i class="bi bi-gear-fill" style="margin-right:8px;"></i>Admin Panel</a>
+                            <a href='/results' style='background:#28a745;color:white;text-decoration:none;border-radius:5px;'><i class="bi bi-bar-chart-fill" style="margin-right:8px;"></i>View Results</a>
                         </p>
                     </div>
                     <footer style='text-align:center;margin-top:30px;color:#999;font-size:12px;'>Designed By Nani Guntreddi</footer>
@@ -184,15 +196,32 @@ def user_login():
         else:
             flash("Please select a valid name from the list!", "error")
     
+    # Sort nominees alphabetically for dropdown
+    sorted_nominees = sorted(NOMINEES)
+    
     return render_template_string("""
         <!DOCTYPE html>
         <html>
         <head>
             <title>Select Your Name</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+            <style>
+                body { font-family:Arial,sans-serif; margin:20px; background:#f8f9fa; }
+                .container { background:white; padding:30px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); max-width:500px; margin:0 auto; }
+                select, button { width:100%; padding:12px; border:1px solid #ddd; border-radius:5px; font-size:16px; box-sizing:border-box; }
+                button { background:#28a745; color:white; border:none; cursor:pointer; margin-top:10px; }
+                @media (max-width: 768px) {
+                    body { margin:10px; }
+                    .container { padding:20px; }
+                    h2 { font-size:1.4em; }
+                    h3 { font-size:1.1em; }
+                    select, button { padding:15px; font-size:18px; }
+                }
+            </style>
         </head>
-        <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
-            <div style='background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:500px;margin:0 auto;'>
+        <body>
+            <div class="container">
                 <h2 style='color:#ff6b35;'><i class="bi bi-hand-thumbs-up-fill" style="margin-right:10px;"></i>Welcome to CIMPHONY 2025 Award Polling</h2>
                 <h3>Please select your name to continue:</h3>
                 
@@ -206,14 +235,14 @@ def user_login():
                 
                 <form method="post" action="/user_login">
                     <div style='margin-bottom:20px;'>
-                        <select name="user_name" required style='width:100%;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:16px;'>
+                        <select name="user_name" required>
                             <option value="">-- Select Your Name --</option>
                             {% for nominee in nominees %}
                                 <option value="{{ nominee }}">{{ nominee }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" style='background:#28a745;color:white;padding:15px 30px;border:none;border-radius:5px;width:100%;font-size:16px;cursor:pointer;'><i class="bi bi-box-arrow-in-right" style="margin-right:8px;"></i>Continue to Voting</button>
+                    <button type="submit"><i class="bi bi-box-arrow-in-right" style="margin-right:8px;"></i>Continue to Voting</button>
                 </form>
                 
                 <div style='text-align:center;margin-top:20px;'>
@@ -224,7 +253,7 @@ def user_login():
             <footer style='text-align:center;margin-top:30px;color:#999;font-size:12px;'>Designed By Nani Guntreddi</footer>
         </body>
         </html>
-    """, nominees=NOMINEES)
+    """, nominees=sorted_nominees)
 
 @app.route("/user_logout")
 def user_logout():
@@ -250,10 +279,23 @@ def admin_login():
         <html>
         <head>
             <title>Admin Login</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+            <style>
+                body { font-family:Arial,sans-serif; margin:20px; background:#f8f9fa; }
+                .container { background:white; padding:30px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); max-width:400px; margin:0 auto; }
+                input, button { width:100%; padding:10px; border:1px solid #ddd; border-radius:5px; box-sizing:border-box; }
+                button { background:#dc3545; color:white; border:none; cursor:pointer; font-size:16px; margin-top:10px; }
+                @media (max-width: 768px) {
+                    body { margin:10px; }
+                    .container { padding:20px; }
+                    h2 { font-size:1.3em; }
+                    input, button { padding:15px; font-size:18px; }
+                }
+            </style>
         </head>
-        <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
-            <div style='background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:400px;margin:0 auto;'>
+        <body>
+            <div class="container">
                 <h2 style='color:#dc3545;'><i class="bi bi-key-fill" style="margin-right:10px;"></i>Admin Login</h2>
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% for category, message in messages %}
@@ -265,9 +307,9 @@ def admin_login():
                 <form method="post" action="/admin_login">
                     <div style='margin-bottom:15px;'>
                         <label style='display:block;margin-bottom:5px;font-weight:bold;'>Admin Password:</label>
-                        <input type="password" name="password" required style='width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;box-sizing:border-box;'>
+                        <input type="password" name="password" required>
                     </div>
-                    <button type="submit" style='background:#dc3545;color:white;padding:12px 25px;border:none;border-radius:5px;width:100%;font-size:16px;cursor:pointer;'><i class="bi bi-unlock-fill" style="margin-right:8px;"></i>Login</button>
+                    <button type="submit"><i class="bi bi-unlock-fill" style="margin-right:8px;"></i>Login</button>
                 </form>
                 <div style='text-align:center;margin-top:20px;'>
                     <a href='/' style='color:#007bff;text-decoration:none;'><i class="bi bi-arrow-left" style="margin-right:5px;"></i>Back to Home</a>
@@ -277,12 +319,6 @@ def admin_login():
         </body>
         </html>
     """)
-
-@app.route("/admin_logout")
-def admin_logout():
-    session.pop('admin_authenticated', None)
-    flash("Logged out successfully!", "success")
-    return redirect("/")
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin_panel():
@@ -424,9 +460,20 @@ def vote(award_id):
                 <html>
                 <head>
                     <title>Poll Results - {{ name }}</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+                    <style>
+                        body { font-family:Arial,sans-serif; margin:20px; }
+                        a { display:inline-block; background:#17a2b8; color:white; padding:8px; text-decoration:none; border-radius:5px; margin:5px; }
+                        @media (max-width: 768px) {
+                            body { margin:10px; }
+                            h2 { font-size:1.4em; }
+                            h3 { font-size:1.2em; }
+                            a { display:block; text-align:center; margin:10px 0; padding:12px; }
+                        }
+                    </style>
                 </head>
-                <body style='font-family:Arial,sans-serif;margin:20px;'>
+                <body>
                     <h2 style='color:#ff6b35;'><i class="bi bi-award-fill" style="margin-right:10px;"></i>{{ name }}</h2>
                     <p><em>{{ description }}</em></p>
                     <h3 style='color:#28a745;'><i class="bi bi-trophy-fill" style="margin-right:8px;"></i>Winner: {{ winner }}</h3>
@@ -434,7 +481,7 @@ def vote(award_id):
                     {{ vote_summary|safe }}
                     <br><br>
                     {{ current_link|safe }}
-                    <a href='/results' style='background:#17a2b8;color:white;padding:8px;text-decoration:none;border-radius:5px;margin-left:10px;'><i class="bi bi-list-ul" style="margin-right:5px;"></i>All Results</a>
+                    <a href='/results'><i class="bi bi-list-ul" style="margin-right:5px;"></i>All Results</a>
                     <footer style='text-align:center;margin-top:30px;color:#999;font-size:12px;'>Designed By Nani Guntreddi</footer>
                 </body>
                 </html>
@@ -448,10 +495,20 @@ def vote(award_id):
                 <html>
                 <head>
                     <title>No Available Nominees</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+                    <style>
+                        body { font-family:Arial,sans-serif; margin:20px; background:#f8f9fa; }
+                        .container { background:white; padding:30px; border-radius:10px; text-align:center; }
+                        @media (max-width: 768px) {
+                            body { margin:10px; }
+                            .container { padding:20px; }
+                            h2, h3 { font-size:1.2em; }
+                        }
+                    </style>
                 </head>
-                <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
-                    <div style='background:white;padding:30px;border-radius:10px;text-align:center;'>
+                <body>
+                    <div class="container">
                         <h2 style='color:#ff6b35;'><i class="bi bi-exclamation-triangle-fill" style="margin-right:10px;"></i>{{ name }}</h2>
                         <h3 style='color:#dc3545;'>No nominees available!</h3>
                         <p>All team members have already won 3 or more awards. Please contact the admin to reset winners or add new nominees.</p>
@@ -488,12 +545,15 @@ def vote(award_id):
         # Add Ranjit at the top with manipulated count
         current_votes.insert(0, ("Ranjit Joshi", ranjit_votes))
     
+    # Sort available nominees alphabetically for voting options
+    sorted_nominees = sorted(available_nominees)
+    
     return render_template("vote.html", 
                          award_id=award_id, 
                          name=name, 
                          description=description, 
                          voted=already_voted, 
-                         nominees=available_nominees,
+                         nominees=sorted_nominees,
                          current_votes=current_votes,
                          user_name=user_name)
 
