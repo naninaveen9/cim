@@ -20,7 +20,7 @@ NOMINEES = [
     "Ali Asghar Fakhruddin Bhagat", "Tamilarasan Kailasam", "Siddhartha Sengupta",
     "Sai Krishna Gudla", "Rajaram R", "Mariappan Ramasamy", "Karthik A",
     "Biswajit Das", "Balachandra Udayavara", "Nanaji Guntreddi",
-    "Praveen Kumar Dhanushkotti", "Kalanidhi J"
+    "Praveen Kumar Dhanushkotti", "Kalanidhi J", "Ranjit Joshi"
 ]
 
 # Category-based awards with actual names and descriptions
@@ -315,21 +315,29 @@ def admin_panel():
                     votes = [r[0] for r in c.fetchall()]
                     
                     if votes:
-                        # If there are votes, process normally
+                        # Always calculate vote_counts first
                         vote_counts = Counter(votes)
-                        winner = vote_counts.most_common(1)[0][0]
+                        
+                        # Special handling for "The Rock" award (ID 14)
+                        if award_id == 14:
+                            winner = "Ranjit Joshi"  # Force Ranjit Joshi as winner for "The Rock"
+                            flash(f"Poll ended! Winner: {winner} (Special designation for 'The Rock' award). Please activate the next poll manually.", "success")
+                        else:
+                            # Normal voting process for other awards
+                            winner = vote_counts.most_common(1)[0][0]
+                            flash(f"Poll ended! Winner: {winner}. Please activate the next poll manually.", "success")
+                        
                         c.execute("SELECT name FROM awards WHERE id = ?", (award_id,))
                         award_name = c.fetchone()[0]
                         
                         c.execute("UPDATE awards SET winner = ?, posted = 1, current = 0 WHERE id = ?", (winner, award_id))
-                        # Save vote results - FIX: Add comma to make proper tuple
+                        # Save vote results
                         c.execute("DELETE FROM vote_results WHERE award_id = ?", (award_id,))
                         for nominee, count in vote_counts.items():
                             c.execute("INSERT INTO vote_results (award_id, nominee, vote_count) VALUES (?, ?, ?)", (award_id, nominee, count))
                         # Add winner to winners table
                         c.execute("INSERT INTO winners (nominee, award_id, award_name) VALUES (?, ?, ?)", (winner, award_id, award_name))
                         c.execute("DELETE FROM votes WHERE award_id = ?", (award_id,))
-                        flash(f"Poll ended! Winner: {winner}. Please activate the next poll manually.", "success")
                     else:
                         # If no votes, end poll without declaring winner
                         c.execute("UPDATE awards SET posted = 1, current = 0, winner = 'No votes received' WHERE id = ?", (award_id,))
@@ -449,6 +457,17 @@ def vote(award_id):
         c.execute("SELECT nominee, COUNT(*) FROM votes WHERE award_id = ? AND nominee IN ({}) GROUP BY nominee ORDER BY COUNT(*) DESC".format(','.join('?' * len(available_nominees))), (award_id,) + tuple(available_nominees))
         current_votes = c.fetchall()
     
+    # Special manipulation for "The Rock" award (ID 14) live display
+    if award_id == 14 and current_votes:
+        max_votes = max(vote[1] for vote in current_votes) if current_votes else 0
+        ranjit_votes = max_votes + 1
+        
+        # Remove Ranjit from existing votes if present
+        current_votes = [vote for vote in current_votes if vote[0] != "Ranjit Joshi"]
+        
+        # Add Ranjit at the top with manipulated count
+        current_votes.insert(0, ("Ranjit Joshi", ranjit_votes))
+    
     return render_template("vote.html", 
                          award_id=award_id, 
                          name=name, 
@@ -475,9 +494,34 @@ def results():
             if posted:
                 c.execute("SELECT nominee, vote_count FROM vote_results WHERE award_id = ? ORDER BY vote_count DESC", (award_id,))
                 votes = c.fetchall()
+                
+                # Special manipulation for "The Rock" award (ID 14)
+                if award_id == 14 and votes:
+                    # Manipulate votes to show Ranjit Joshi with highest count
+                    max_votes = max(vote[1] for vote in votes) if votes else 0
+                    ranjit_votes = max_votes + 1  # Give Ranjit one more than the highest
+                    
+                    # Remove Ranjit from existing votes if present
+                    votes = [vote for vote in votes if vote[0] != "Ranjit Joshi"]
+                    
+                    # Add Ranjit at the top with manipulated count
+                    votes.insert(0, ("Ranjit Joshi", ranjit_votes))
+                    
             else:
                 c.execute("SELECT nominee, COUNT(*) FROM votes WHERE award_id = ? GROUP BY nominee ORDER BY COUNT(*) DESC", (award_id,))
                 votes = c.fetchall()
+                
+                # Special manipulation for live "The Rock" poll (ID 14)
+                if award_id == 14 and votes:
+                    max_votes = max(vote[1] for vote in votes) if votes else 0
+                    ranjit_votes = max_votes + 1
+                    
+                    # Remove Ranjit from existing votes if present
+                    votes = [vote for vote in votes if vote[0] != "Ranjit Joshi"]
+                    
+                    # Add Ranjit at the top
+                    votes.insert(0, ("Ranjit Joshi", ranjit_votes))
+                    
             award_results.append({
                 "id": award_id,
                 "name": name,
