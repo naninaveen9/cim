@@ -193,7 +193,7 @@ def user_login():
         </head>
         <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
             <div style='background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:500px;margin:0 auto;'>
-                <h2 style='color:#ff6b35;'><i class="bi bi-hand-thumbs-up-fill" style="margin-right:10px;"></i>Welcome to Award Polling!</h2>
+                <h2 style='color:#ff6b35;'><i class="bi bi-hand-thumbs-up-fill" style="margin-right:10px;"></i>Welcome to CIMPHONY 2025 Award Polling</h2>
                 <h3>Please select your name to continue:</h3>
                 
                 {% with messages = get_flashed_messages(with_categories=true) %}
