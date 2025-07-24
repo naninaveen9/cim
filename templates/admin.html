@@ -41,6 +41,7 @@
         .award-item { background: white; padding: 8px; margin: 4px 0; border-radius: 3px; border-left: 3px solid #dee2e6; }
         .award-item.current { border-left-color: #28a745; background: #d4edda; }
         .award-item.posted { border-left-color: #dc3545; background: #f8d7da; }
+        footer { text-align: center; margin-top: 30px; color: #999; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -143,7 +144,7 @@
         
         <div class="stats">
             <h4>📊 Statistics</h4>
-            <p><strong>Available Nominees:</strong> {{ available_count }} / 31</p>
+            <p><strong>Available Nominees:</strong> {{ available_count }} / 32</p>
             <p><strong>Previous Winners:</strong> {{ winners_list|length }} total wins</p>
             <p><strong>Rule:</strong> Nominees removed after 3 wins</p>
         </div>
@@ -237,6 +238,8 @@
             <a href="/results">📊 View All Results</a>
         </div>
     </div>
+
+    <footer>Designed By Nani Guntreddi</footer>
 
     <script>
         function toggleContent(contentId) {

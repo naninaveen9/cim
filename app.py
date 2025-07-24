@@ -152,17 +152,21 @@ def index():
             return render_template_string("""
                 <!DOCTYPE html>
                 <html>
-                <head><title>Award Polls - No Active Poll</title></head>
+                <head>
+                    <title>Award Polls - No Active Poll</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+                </head>
                 <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
                     <div style='background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:600px;margin:0 auto;text-align:center;'>
-                        <h2>🏆 Award Polling System</h2>
+                        <h2 style='color:#ff6b35;'><i class="bi bi-trophy" style="margin-right:10px;"></i>Award Polling System</h2>
                         <h3 style='color:#dc3545;'>No active poll at the moment.</h3>
                         <p style='color:#666;'>An administrator needs to activate a poll.</p>
                         <p>
-                            <a href='/admin' style='background:#007bff;color:white;padding:15px 25px;text-decoration:none;border-radius:5px;margin:10px;display:inline-block;'>👨‍💼 Admin Panel</a>
-                            <a href='/results' style='background:#28a745;color:white;padding:15px 25px;text-decoration:none;border-radius:5px;margin:10px;display:inline-block;'>📊 View Results</a>
+                            <a href='/admin' style='background:#007bff;color:white;padding:15px 25px;text-decoration:none;border-radius:5px;margin:10px;display:inline-block;'><i class="bi bi-gear-fill" style="margin-right:8px;"></i>Admin Panel</a>
+                            <a href='/results' style='background:#28a745;color:white;padding:15px 25px;text-decoration:none;border-radius:5px;margin:10px;display:inline-block;'><i class="bi bi-bar-chart-fill" style="margin-right:8px;"></i>View Results</a>
                         </p>
                     </div>
+                    <footer style='text-align:center;margin-top:30px;color:#999;font-size:12px;'>Designed By Nani Guntreddi</footer>
                 </body>
                 </html>
             """)
@@ -183,10 +187,13 @@ def user_login():
     return render_template_string("""
         <!DOCTYPE html>
         <html>
-        <head><title>Select Your Name</title></head>
+        <head>
+            <title>Select Your Name</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+        </head>
         <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
             <div style='background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:500px;margin:0 auto;'>
-                <h2>🏆 Welcome to Award Polling!</h2>
+                <h2 style='color:#ff6b35;'><i class="bi bi-hand-thumbs-up-fill" style="margin-right:10px;"></i>Welcome to Award Polling!</h2>
                 <h3>Please select your name to continue:</h3>
                 
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -206,14 +213,15 @@ def user_login():
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" style='background:#28a745;color:white;padding:15px 30px;border:none;border-radius:5px;width:100%;font-size:16px;cursor:pointer;'>🗳️ Continue to Voting</button>
+                    <button type="submit" style='background:#28a745;color:white;padding:15px 30px;border:none;border-radius:5px;width:100%;font-size:16px;cursor:pointer;'><i class="bi bi-box-arrow-in-right" style="margin-right:8px;"></i>Continue to Voting</button>
                 </form>
                 
                 <div style='text-align:center;margin-top:20px;'>
-                    <a href='/results' style='color:#007bff;text-decoration:none;'>📊 View Results</a> | 
-                    <a href='/admin' style='color:#007bff;text-decoration:none;'>👨‍💼 Admin</a>
+                    <a href='/results' style='color:#007bff;text-decoration:none;'><i class="bi bi-graph-up" style="margin-right:5px;"></i>View Results</a> | 
+                    <a href='/admin' style='color:#007bff;text-decoration:none;'><i class="bi bi-shield-lock" style="margin-right:5px;"></i>Admin Panel</a>
                 </div>
             </div>
+            <footer style='text-align:center;margin-top:30px;color:#999;font-size:12px;'>Designed By Nani Guntreddi</footer>
         </body>
         </html>
     """, nominees=NOMINEES)
@@ -240,10 +248,13 @@ def admin_login():
     return render_template_string("""
         <!DOCTYPE html>
         <html>
-        <head><title>Admin Login</title></head>
+        <head>
+            <title>Admin Login</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+        </head>
         <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
             <div style='background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:400px;margin:0 auto;'>
-                <h2>🔐 Admin Login</h2>
+                <h2 style='color:#dc3545;'><i class="bi bi-key-fill" style="margin-right:10px;"></i>Admin Login</h2>
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% for category, message in messages %}
                         <div style='padding:10px;margin:10px 0;border-radius:5px;{% if category=="error" %}background:#f8d7da;color:#721c24;{% else %}background:#d4edda;color:#155724;{% endif %}'>
@@ -256,12 +267,13 @@ def admin_login():
                         <label style='display:block;margin-bottom:5px;font-weight:bold;'>Admin Password:</label>
                         <input type="password" name="password" required style='width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;box-sizing:border-box;'>
                     </div>
-                    <button type="submit" style='background:#dc3545;color:white;padding:12px 25px;border:none;border-radius:5px;width:100%;font-size:16px;cursor:pointer;'>🔓 Login</button>
+                    <button type="submit" style='background:#dc3545;color:white;padding:12px 25px;border:none;border-radius:5px;width:100%;font-size:16px;cursor:pointer;'><i class="bi bi-unlock-fill" style="margin-right:8px;"></i>Login</button>
                 </form>
                 <div style='text-align:center;margin-top:20px;'>
-                    <a href='/' style='color:#007bff;text-decoration:none;'>← Back to Home</a>
+                    <a href='/' style='color:#007bff;text-decoration:none;'><i class="bi bi-arrow-left" style="margin-right:5px;"></i>Back to Home</a>
                 </div>
             </div>
+            <footer style='text-align:center;margin-top:30px;color:#999;font-size:12px;'>Designed By Nani Guntreddi</footer>
         </body>
         </html>
     """)
@@ -410,16 +422,20 @@ def vote(award_id):
             return render_template_string("""
                 <!DOCTYPE html>
                 <html>
-                <head><title>Poll Results - {{ name }}</title></head>
+                <head>
+                    <title>Poll Results - {{ name }}</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+                </head>
                 <body style='font-family:Arial,sans-serif;margin:20px;'>
-                    <h2>🏆 {{ name }}</h2>
+                    <h2 style='color:#ff6b35;'><i class="bi bi-award-fill" style="margin-right:10px;"></i>{{ name }}</h2>
                     <p><em>{{ description }}</em></p>
-                    <h3 style='color:#28a745;'>🎉 Winner: {{ winner }}</h3>
-                    <h4>Vote Breakdown:</h4>
+                    <h3 style='color:#28a745;'><i class="bi bi-trophy-fill" style="margin-right:8px;"></i>Winner: {{ winner }}</h3>
+                    <h4><i class="bi bi-pie-chart-fill" style="margin-right:8px;"></i>Vote Breakdown:</h4>
                     {{ vote_summary|safe }}
                     <br><br>
                     {{ current_link|safe }}
-                    <a href='/results' style='background:#17a2b8;color:white;padding:8px;text-decoration:none;border-radius:5px;margin-left:10px;'>📈 All Results</a>
+                    <a href='/results' style='background:#17a2b8;color:white;padding:8px;text-decoration:none;border-radius:5px;margin-left:10px;'><i class="bi bi-list-ul" style="margin-right:5px;"></i>All Results</a>
+                    <footer style='text-align:center;margin-top:30px;color:#999;font-size:12px;'>Designed By Nani Guntreddi</footer>
                 </body>
                 </html>
             """, name=name, description=description, winner=winner, vote_summary=vote_summary, current_link=current_link)
@@ -430,14 +446,18 @@ def vote(award_id):
             return render_template_string("""
                 <!DOCTYPE html>
                 <html>
-                <head><title>No Available Nominees</title></head>
+                <head>
+                    <title>No Available Nominees</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+                </head>
                 <body style='font-family:Arial,sans-serif;margin:20px;background:#f8f9fa;'>
                     <div style='background:white;padding:30px;border-radius:10px;text-align:center;'>
-                        <h2>🏆 {{ name }}</h2>
+                        <h2 style='color:#ff6b35;'><i class="bi bi-exclamation-triangle-fill" style="margin-right:10px;"></i>{{ name }}</h2>
                         <h3 style='color:#dc3545;'>No nominees available!</h3>
                         <p>All team members have already won 3 or more awards. Please contact the admin to reset winners or add new nominees.</p>
-                        <a href='/admin' style='background:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'>👨‍💼 Admin Panel</a>
+                        <a href='/admin' style='background:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'><i class="bi bi-gear-fill" style="margin-right:8px;"></i>Admin Panel</a>
                     </div>
+                    <footer style='text-align:center;margin-top:30px;color:#999;font-size:12px;'>Designed By Nani Guntreddi</footer>
                 </body>
                 </html>
             """, name=name)
